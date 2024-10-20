@@ -343,6 +343,37 @@
         alert("Please enter your name to start the exercise.");
       }
     };
+// Attach event listeners to default/preloaded columns
+document.querySelectorAll(".column").forEach((column) => {
+  addColumnEventListeners(column);
+  
+  // Attach delete button functionality to preloaded columns
+  const deleteBtn = column.querySelector(".delete-btn");
+  if (deleteBtn) {
+    deleteBtn.onclick = function () {
+      column.remove();
+    };
+  }
+});
+
+function addColumnEventListeners(column) {
+  column.addEventListener("dragover", function (e) {
+    e.preventDefault();
+    this.style.boxShadow = "0 4px 8px rgba(0, 123, 255, 0.5)";
+  });
+
+  column.addEventListener("dragleave", function () {
+    this.style.boxShadow = "";
+  });
+
+  column.addEventListener("drop", function (e) {
+    e.preventDefault();
+    if (draggedItem) {
+      this.appendChild(draggedItem);
+    }
+    this.style.boxShadow = "";
+  });
+}
 
     function createCard(text = "New Card") {
       const card = document.createElement("div");
