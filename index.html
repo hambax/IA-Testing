@@ -605,35 +605,7 @@
           });
         });
 
-        document.querySelectorAll(".column").forEach((column) => {
-          column.addEventListener("dragover", function (e) {
-            e.preventDefault();
-            this.style.boxShadow = "0 4px 8px rgba(0, 123, 255, 0.5)";
-          });
-
-          column.addEventListener("dragleave", function () {
-            this.style.boxShadow = "";
-          });
-
-          column.addEventListener("drop", function (e) {
-            e.preventDefault();
-            if (draggedItem) {
-              this.appendChild(draggedItem);
-            }
-            this.style.boxShadow = "";
-          });
-        });
-
-        document.querySelectorAll(".card .delete-btn").forEach((btn) => {
-          btn.onclick = function (e) {
-            e.stopPropagation();
-            this.parentElement.remove();
-          };
-        });
-
-        document.querySelectorAll(".column .delete-btn").forEach((btn) => {
-          btn.onclick = function () {
-            this.parentElement.remove();
+   
           };
         });
       });
