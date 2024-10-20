@@ -155,10 +155,13 @@
         <button id="addCard" class="secondary-btn">+ Add Card</button>
         <button id="addColumn" class="secondary-btn">+ Add Column</button>
         <button id="saveChoices" class="primary-btn">Save Choices</button>
-        
+        <button id="showAnalysis" class="primary-btn">Show Analysis</button>
       </div>
 
-<div class="container" id="container">
+      <div class="container" id="container">
+        <div class="column" id="cardPool">
+          <h2>Card Pool</h2>
+        <div class="container" id="container">
         <div class="column" id="cardPool">
           <h2>Card Pool</h2>
           <div class="card" draggable="true">
@@ -310,7 +313,6 @@
           <button class="delete-btn">×</button>
         </div>
       </div>
-    </div>
 
     <script>
       document.addEventListener("DOMContentLoaded", (event) => {
