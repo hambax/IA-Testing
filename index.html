@@ -155,10 +155,10 @@
         <button id="addCard" class="secondary-btn">+ Add Card</button>
         <button id="addColumn" class="secondary-btn">+ Add Column</button>
         <button id="saveChoices" class="primary-btn">Save Choices</button>
-      
+        <button id="showAnalysis" class="primary-btn">Show Analysis</button>
       </div>
 
-      <div class="container" id="container">
+<div class="container" id="container">
         <div class="column" id="cardPool">
           <h2>Card Pool</h2>
           <div class="card" draggable="true">
@@ -308,13 +308,6 @@
         <div class="column">
           <h2>Leave</h2>
           <button class="delete-btn">×</button>
-        </div>
-      </div>
-
-      <div id="analysisContainer" style="display: none">
-        <h2>Statistical Analysis</h2>
-        <div class="chart-container">
-          <canvas id="heatmapChart"></canvas>
         </div>
       </div>
     </div>
@@ -605,8 +598,36 @@
           });
         });
 
-   
+        document.querySelectorAll(".column").forEach((column) => {
+          column.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            this.style.boxShadow = "0 4px 8px rgba(0, 123, 255, 0.5)";
           });
+
+          column.addEventListener("dragleave", function () {
+            this.style.boxShadow = "";
+          });
+
+          column.addEventListener("drop", function (e) {
+            e.preventDefault();
+            if (draggedItem) {
+              this.appendChild(draggedItem);
+            }
+            this.style.boxShadow = "";
+          });
+        });
+
+        document.querySelectorAll(".card .delete-btn").forEach((btn) => {
+          btn.onclick = function (e) {
+            e.stopPropagation();
+            this.parentElement.remove();
+          };
+        });
+
+        document.querySelectorAll(".column .delete-btn").forEach((btn) => {
+          btn.onclick = function () {
+            this.parentElement.remove();
+          };
         });
       });
     </script>
