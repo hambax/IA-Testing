@@ -320,295 +320,164 @@
     </div>
 
     <script>
-      document.addEventListener("DOMContentLoaded", (event) => {
-        const userName = document.getElementById("userName");
-        const startExerciseBtn = document.getElementById("startExercise");
-        const exerciseContent = document.getElementById("exerciseContent");
-        const container = document.getElementById("container");
-        const addCardBtn = document.getElementById("addCard");
-        const addColumnBtn = document.getElementById("addColumn");
-        const saveChoicesBtn = document.getElementById("saveChoices");
-        const showAnalysisBtn = document.getElementById("showAnalysis");
-        const cardPool = document.getElementById("cardPool");
-        const analysisContainer = document.getElementById("analysisContainer");
+  document.addEventListener("DOMContentLoaded", (event) => {
+    const userName = document.getElementById("userName");
+    const startExerciseBtn = document.getElementById("startExercise");
+    const exerciseContent = document.getElementById("exerciseContent");
+    const container = document.getElementById("container");
+    const addCardBtn = document.getElementById("addCard");
+    const addColumnBtn = document.getElementById("addColumn");
+    const saveChoicesBtn = document.getElementById("saveChoices");
+    const cardPool = document.getElementById("cardPool");
+    const analysisContainer = document.getElementById("analysisContainer");
 
-        let draggedItem = null;
-        let userChoices = [];
+    let draggedItem = null;
+    let userChoices = [];
 
-        startExerciseBtn.onclick = function () {
-          if (userName.value.trim() !== "") {
-            exerciseContent.style.display = "block";
-            this.disabled = true;
-            userName.disabled = true;
-          } else {
-            alert("Please enter your name to start the exercise.");
-          }
-        };
+    startExerciseBtn.onclick = function () {
+      if (userName.value.trim() !== "") {
+        exerciseContent.style.display = "block";
+        this.disabled = true;
+        userName.disabled = true;
+      } else {
+        alert("Please enter your name to start the exercise.");
+      }
+    };
+// Attach event listeners to default/preloaded columns
+document.querySelectorAll(".column").forEach((column) => {
+  addColumnEventListeners(column);
+  
+  // Attach delete button functionality to preloaded columns
+  const deleteBtn = column.querySelector(".delete-btn");
+  if (deleteBtn) {
+    deleteBtn.onclick = function () {
+      column.remove();
+    };
+  }
+});
 
-        function createCard(text = "New Card") {
-          const card = document.createElement("div");
-          card.className = "card";
-          card.draggable = true;
-          card.textContent = text;
+function addColumnEventListeners(column) {
+  column.addEventListener("dragover", function (e) {
+    e.preventDefault();
+    this.style.boxShadow = "0 4px 8px rgba(0, 123, 255, 0.5)";
+  });
 
-          const deleteBtn = document.createElement("button");
-          deleteBtn.className = "delete-btn";
-          deleteBtn.textContent = "×";
-          deleteBtn.onclick = function (e) {
-            e.stopPropagation();
-            card.remove();
-          };
+  column.addEventListener("dragleave", function () {
+    this.style.boxShadow = "";
+  });
 
-          card.appendChild(deleteBtn);
+  column.addEventListener("drop", function (e) {
+    e.preventDefault();
+    if (draggedItem) {
+      this.appendChild(draggedItem);
+    }
+    this.style.boxShadow = "";
+  });
+}
 
-          card.addEventListener("dragstart", function () {
-            draggedItem = card;
-            setTimeout(() => (this.style.opacity = "0.5"), 0);
-          });
+    function createCard(text = "New Card") {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.draggable = true;
+      card.textContent = text;
 
-          card.addEventListener("dragend", function () {
-            setTimeout(() => (this.style.opacity = ""), 0);
-            draggedItem = null;
-          });
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.textContent = "×";
+      deleteBtn.onclick = function (e) {
+        e.stopPropagation();
+        card.remove();
+      };
 
-          return card;
-        }
+      card.appendChild(deleteBtn);
 
-        function createColumn(title = "New Column") {
-          const column = document.createElement("div");
-          column.className = "column";
-
-          const heading = document.createElement("h2");
-          heading.textContent = title;
-          column.appendChild(heading);
-
-          const deleteBtn = document.createElement("button");
-          deleteBtn.className = "delete-btn";
-          deleteBtn.textContent = "×";
-          deleteBtn.onclick = function () {
-            column.remove();
-          };
-          column.appendChild(deleteBtn);
-
-          column.addEventListener("dragover", function (e) {
-            e.preventDefault();
-            this.style.boxShadow = "0 4px 8px rgba(0, 123, 255, 0.5)";
-          });
-
-          column.addEventListener("dragleave", function () {
-            this.style.boxShadow = "";
-          });
-
-          column.addEventListener("drop", function (e) {
-            e.preventDefault();
-            if (draggedItem) {
-              this.appendChild(draggedItem);
-            }
-            this.style.boxShadow = "";
-          });
-
-          return column;
-        }
-
-        function getElementText(element) {
-          let text = "";
-
-          element.childNodes.forEach((node) => {
-            // Only append text nodes (nodeType === 3), ignoring elements like buttons
-            if (node.nodeType === Node.TEXT_NODE) {
-              text += node.textContent.trim();
-            }
-          });
-
-          return text;
-        }
-
-        function sendEmail(address, subject, body) {
-          window.location.href =
-            "mailto:" +
-            address +
-            "?subject=" +
-            encodeURIComponent(subject) +
-            "&body=" +
-            encodeURIComponent(body);
-        }
-
-        addCardBtn.onclick = function () {
-          const cardText = prompt("Enter card text:");
-          if (cardText) {
-            cardPool.appendChild(createCard(cardText));
-          }
-        };
-
-        addColumnBtn.onclick = function () {
-          const columnTitle = prompt("Enter column title:");
-          if (columnTitle) {
-            container.appendChild(createColumn(columnTitle));
-          }
-        };
-
-        saveChoicesBtn.onclick = function () {
-          const choices = {};
-          document.querySelectorAll(".column").forEach((column) => {
-            const columnTitle = column.querySelector("h2").textContent;
-            choices[columnTitle] = Array.from(
-              column.querySelectorAll(".card")
-            ).map((card) => getElementText(card));
-          });
-          userChoices.push(choices);
-
-          const csv_data = [
-            ["User Name", ...Object.keys(choices)], // cols
-            [userName.value, ...Object.values(choices)], // data
-          ];
-          const csv_output = csv_stringify_sync.stringify(csv_data);
-
-          const output = `
-          UXTesting data from ${userName.value}
-          
-          CSV: \n\n${csv_output}
-
-          JSON: \n\n${JSON.stringify(choices, null, 2)}
-          `;
-
-          // console.log(output);
-          sendEmail("hamish.baxter@datacom.com", "UX Testing", output);
-        };
-
-        showAnalysisBtn.onclick = function () {
-          if (userChoices.length === 0) {
-            alert("No data available for analysis. Please save choices first.");
-            return;
-          }
-          updateAnalysis();
-          analysisContainer.style.display = "block";
-        };
-
-        function updateAnalysis() {
-          const correlationData = calculateConfidence();
-          renderHeatmapChart(correlationData);
-        }
-
-        function calculateConfidence() {
-          const cardCorrelations = {};
-          const cardList = [];
-          let totalUsers = userChoices.length;
-
-          userChoices.forEach((choice) => {
-            Object.values(choice).forEach((cards) => {
-              cards.forEach((card) => {
-                if (!cardList.includes(card)) {
-                  cardList.push(card);
-                }
-                cards.forEach((otherCard) => {
-                  if (card !== otherCard) {
-                    if (!cardCorrelations[card]) {
-                      cardCorrelations[card] = {};
-                    }
-                    if (!cardCorrelations[card][otherCard]) {
-                      cardCorrelations[card][otherCard] = 0;
-                    }
-                    cardCorrelations[card][otherCard]++;
-                  }
-                });
-              });
-            });
-          });
-
-          const correlationData = cardList.map((card1) =>
-            cardList.map((card2) =>
-              cardCorrelations[card1] && cardCorrelations[card1][card2]
-                ? cardCorrelations[card1][card2] / totalUsers
-                : 0
-            )
-          );
-
-          return { cardList, correlationData };
-        }
-
-        function renderHeatmapChart(data) {
-          const ctx = document.getElementById("heatmapChart").getContext("2d");
-
-          if (window.heatmapChart instanceof Chart) {
-            window.heatmapChart.destroy();
-          }
-
-          window.heatmapChart = new Chart(ctx, {
-            type: "matrix",
-            data: {
-              datasets: [
-                {
-                  label: "Correlation Heatmap",
-                  data: data.cardList.flatMap((card1, i) =>
-                    data.cardList.map((card2, j) => ({
-                      x: j,
-                      y: i,
-                      v: data.correlationData[i][j],
-                    }))
-                  ),
-                  width: ({ chart }) =>
-                    (chart.chartArea || {}).width / data.cardList.length - 1,
-                  height: ({ chart }) =>
-                    (chart.chartArea || {}).height / data.cardList.length - 1,
-                  backgroundColor: ({ dataset, dataIndex, parsed }) => {
-                    const alpha = parsed.v;
-                    return `rgba(0, 123, 255, ${alpha})`;
-                  },
-                },
-              ],
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              plugins: {
-                legend: { display: false },
-                tooltip: {
-                  callbacks: {
-                    title: (context) =>
-                      `${data.cardList[context[0].parsed.x]} - ${
-                        data.cardList[context[0].parsed.y]
-                      }`,
-                    label: (context) =>
-                      `Correlation: ${(context.parsed.v * 100).toFixed(2)}%`,
-                  },
-                },
-              },
-              scales: {
-                x: {
-                  type: "category",
-                  position: "top",
-                  labels: data.cardList,
-                  ticks: {
-                    maxRotation: 90,
-                    minRotation: 90,
-                  },
-                },
-                y: {
-                  type: "category",
-                  labels: data.cardList,
-                  offset: true,
-                },
-              },
-            },
-          });
-        }
-
-        document.querySelectorAll(".card").forEach((card) => {
-          card.addEventListener("dragstart", function () {
-            draggedItem = card;
-            setTimeout(() => (this.style.opacity = "0.5"), 0);
-          });
-
-          card.addEventListener("dragend", function () {
-            setTimeout(() => (this.style.opacity = ""), 0);
-            draggedItem = null;
-          });
-        });
-
-   
-          });
-        });
+      card.addEventListener("dragstart", function () {
+        draggedItem = card;
+        setTimeout(() => (this.style.opacity = "0.5"), 0);
       });
-    </script>
+
+      card.addEventListener("dragend", function () {
+        setTimeout(() => (this.style.opacity = ""), 0);
+        draggedItem = null;
+      });
+
+      return card;
+    }
+
+    function createColumn(title = "New Column") {
+      const column = document.createElement("div");
+      column.className = "column";
+
+      const heading = document.createElement("h2");
+      heading.textContent = title;
+      column.appendChild(heading);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.textContent = "×";
+      deleteBtn.onclick = function () {
+        column.remove();
+      };
+      column.appendChild(deleteBtn);
+
+      column.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        this.style.boxShadow = "0 4px 8px rgba(0, 123, 255, 0.5)";
+      });
+
+      column.addEventListener("dragleave", function () {
+        this.style.boxShadow = "";
+      });
+
+      column.addEventListener("drop", function (e) {
+        e.preventDefault();
+        if (draggedItem) {
+          this.appendChild(draggedItem);
+        }
+        this.style.boxShadow = "";
+      });
+
+      return column;
+    }
+
+    addCardBtn.onclick = function () {
+      const cardText = prompt("Enter card text:");
+      if (cardText) {
+        cardPool.appendChild(createCard(cardText));
+      }
+    };
+
+    addColumnBtn.onclick = function () {
+      const columnTitle = prompt("Enter column title:");
+      if (columnTitle) {
+        container.appendChild(createColumn(columnTitle));
+      }
+    };
+
+    saveChoicesBtn.onclick = function () {
+      const choices = {};
+      document.querySelectorAll(".column").forEach((column) => {
+        const columnTitle = column.querySelector("h2").textContent;
+        choices[columnTitle] = Array.from(column.querySelectorAll(".card")).map(
+          (card) => card.textContent.trim()
+        );
+      });
+      userChoices.push(choices);
+      console.log("User Choices:", userChoices);
+    };
+
+    document.querySelectorAll(".card").forEach((card) => {
+      card.addEventListener("dragstart", function () {
+        draggedItem = card;
+        setTimeout(() => (this.style.opacity = "0.5"), 0);
+      });
+
+      card.addEventListener("dragend", function () {
+        setTimeout(() => (this.style.opacity = ""), 0);
+        draggedItem = null;
+      });
+    });
+  });
+</script>
   </body>
 </html>
