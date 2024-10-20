@@ -155,100 +155,28 @@
         <button id="addCard" class="secondary-btn">+ Add Card</button>
         <button id="addColumn" class="secondary-btn">+ Add Column</button>
         <button id="saveChoices" class="primary-btn">Save Choices</button>
-      
+        <button id="showAnalysis" class="primary-btn">Show Analysis</button>
       </div>
 
       <div class="container" id="container">
         <div class="column" id="cardPool">
           <h2>Card Pool</h2>
           <div class="card" draggable="true">
-            Employee Name<button class="delete-btn">×</button>
+            Personal Details<button class="delete-btn">×</button>
           </div>
           <div class="card" draggable="true">
-            Contact Email<button class="delete-btn">×</button>
+            Contact Information<button class="delete-btn">×</button>
           </div>
           <div class="card" draggable="true">
-            Work Email<button class="delete-btn">×</button>
-          </div>
-          <div class="card" draggable="true">
-            Contact phone<button class="delete-btn">×</button>
-          </div>
-          <div class="card" draggable="true">
-            Employee Code<button class="delete-btn">
+            Tax Details (IRD Number, Tax Code)<button class="delete-btn">
               ×
             </button>
           </div>
-<div class="card" draggable="true">
-    Taxation Reporting Status<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    IRD Number<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Tax Code<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Special Tax Rate<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Withholding Tax Rate<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Special Student Loan Rate<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    SLBOR<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    SLCIR<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    ACC Levy<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Company Name<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Company Code/Unique Identifier<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Start Date With Company<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Years of Service with the Company<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Position/Title/Role<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Start Date With Position<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Employment Classification (eg. full time)<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Standard Hours Paid<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    KiwiSaver Option - Ability to Opt in or Out<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    KiwiSaver Contribution Percentages<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    ESCT Rate<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Savings Suspension<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Kiwisaver Exempt Income<button class="delete-btn">×</button>
-</div>
           <div class="card" draggable="true">
-            Bank Account Number<button class="delete-btn">×</button>
+            Bank Account Details<button class="delete-btn">×</button>
           </div>
           <div class="card" draggable="true">
-            Emergency Contact Details<button class="delete-btn">×</button>
+            Emergency Contact<button class="delete-btn">×</button>
           </div>
           <div class="card" draggable="true">
             Employment Start Date<button class="delete-btn">×</button>
@@ -259,35 +187,17 @@
             </button>
           </div>
           <div class="card" draggable="true">
+            KiwiSaver Details<button class="delete-btn">×</button>
+          </div>
+          <div class="card" draggable="true">
+            Student Loan Details<button class="delete-btn">×</button>
+          </div>
+          <div class="card" draggable="true">
             Employment Contract/Agreement<button class="delete-btn">×</button>
           </div>
-<div class="card" draggable="true">
-    Annual Leave balance<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Annual Leave total taken<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Annual leave total accrued<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Sick Leave balance/entitlement<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Other Leave taken (e.g., parental, bereavement)<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Regular Working Hours<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Work Pattern Flexibility Arrangements<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Notice Period (if applicable)<button class="delete-btn">×</button>
-</div>
-<div class="card" draggable="true">
-    Severance Pay (If applicable)<button class="delete-btn">×</button>
-</div>
+          <div class="card" draggable="true">
+            Leave Balances<button class="delete-btn">×</button>
+          </div>
         </div>
         <div class="column">
           <h2>Employment Details</h2>
@@ -605,8 +515,36 @@
           });
         });
 
-   
+        document.querySelectorAll(".column").forEach((column) => {
+          column.addEventListener("dragover", function (e) {
+            e.preventDefault();
+            this.style.boxShadow = "0 4px 8px rgba(0, 123, 255, 0.5)";
           });
+
+          column.addEventListener("dragleave", function () {
+            this.style.boxShadow = "";
+          });
+
+          column.addEventListener("drop", function (e) {
+            e.preventDefault();
+            if (draggedItem) {
+              this.appendChild(draggedItem);
+            }
+            this.style.boxShadow = "";
+          });
+        });
+
+        document.querySelectorAll(".card .delete-btn").forEach((btn) => {
+          btn.onclick = function (e) {
+            e.stopPropagation();
+            this.parentElement.remove();
+          };
+        });
+
+        document.querySelectorAll(".column .delete-btn").forEach((btn) => {
+          btn.onclick = function () {
+            this.parentElement.remove();
+          };
         });
       });
     </script>
