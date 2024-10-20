@@ -610,6 +610,109 @@
             e.preventDefault();
             this.style.boxShadow = "0 4px 8px rgba(0, 123, 255, 0.5)";
           });
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    let draggedItem = null;
+
+    function createCard(text = "New Card") {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.draggable = true;
+      card.textContent = text;
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.textContent = "×";
+      deleteBtn.onclick = function (e) {
+        e.stopPropagation();
+        card.remove();
+      };
+
+      card.appendChild(deleteBtn);
+
+      card.addEventListener("dragstart", function () {
+        draggedItem = card;
+        setTimeout(() => (this.style.opacity = "0.5"), 0);
+      });
+
+      card.addEventListener("dragend", function () {
+        setTimeout(() => (this.style.opacity = ""), 0);
+        draggedItem = null;
+      });
+
+      return card;
+    }
+
+    function createColumn(title = "New Column") {
+      const column = document.createElement("div");
+      column.className = "column";
+
+      const heading = document.createElement("h2");
+      heading.textContent = title;
+      column.appendChild(heading);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.textContent = "×";
+      deleteBtn.onclick = function () {
+        column.remove();
+      };
+      column.appendChild(deleteBtn);
+
+      column.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        this.style.boxShadow = "0 4px 8px rgba(0, 123, 255, 0.5)";
+      });
+
+      column.addEventListener("dragleave", function () {
+        this.style.boxShadow = "";
+      });
+
+      column.addEventListener("drop", function (e) {
+        e.preventDefault();
+        if (draggedItem) {
+          this.appendChild(draggedItem);
+        }
+        this.style.boxShadow = "";
+      });
+
+      return column;
+    }
+
+    // Existing drag and drop initialization for cards
+    document.querySelectorAll(".card").forEach((card) => {
+      card.addEventListener("dragstart", function () {
+        draggedItem = card;
+        setTimeout(() => (this.style.opacity = "0.5"), 0);
+      });
+
+      card.addEventListener("dragend", function () {
+        setTimeout(() => (this.style.opacity = ""), 0);
+        draggedItem = null;
+      });
+    });
+
+    // Existing drag and drop initialization for columns
+    document.querySelectorAll(".column").forEach((column) => {
+      column.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        this.style.boxShadow = "0 4px 8px rgba(0, 123, 255, 0.5)";
+      });
+
+      column.addEventListener("dragleave", function () {
+        this.style.boxShadow = "";
+      });
+
+      column.addEventListener("drop", function (e) {
+        e.preventDefault();
+        if (draggedItem) {
+          this.appendChild(draggedItem);
+        }
+        this.style.boxShadow = "";
+      });
+    });
+  });
+</script>
 
           column.addEventListener("dragleave", function () {
             this.style.boxShadow = "";
